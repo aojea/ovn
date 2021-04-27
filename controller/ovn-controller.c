@@ -2753,6 +2753,7 @@ main(int argc, char *argv[])
     exiting = false;
     restart = false;
     bool sb_monitor_all = false;
+    fatal_signal_enable_graceful_shutdown();
     while (!exiting) {
         memory_run();
         if (memory_should_report()) {
@@ -3070,6 +3071,9 @@ loop_done:
         memory_wait();
         poll_block();
         if (should_service_stop()) {
+            exiting = true;
+        }
+        if (fatal_signal_should_graceful_exit()){
             exiting = true;
         }
     }

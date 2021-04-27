@@ -14316,6 +14316,7 @@ main(int argc, char *argv[])
     exiting = false;
     state.had_lock = false;
     state.paused = false;
+    fatal_signal_enable_graceful_shutdown();
 
     while (!exiting) {
         memory_run();
@@ -14423,6 +14424,9 @@ main(int argc, char *argv[])
 
         poll_block();
         if (should_service_stop()) {
+            exiting = true;
+        }
+        if (fatal_signal_should_graceful_exit()){
             exiting = true;
         }
     }
